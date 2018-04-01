@@ -64,7 +64,7 @@ repositories {
 *
 *   ./gradlew build to build the project
 *
-*   to add a dependencies to the build use : 'extraLibs'
+*   to add a dependencies wich are inclued in the build use : 'extraLibs'
 *   extraLibs group:'', name:'', version: ''
 *
 *   add 'changing : true' to check for updates every build
