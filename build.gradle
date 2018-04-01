@@ -1,0 +1,130 @@
+group 'net.annorit24'
+version '1.0-SNAPSHOT'
+description 'description'
+
+//PLUGINS
+apply plugin: 'java'
+apply plugin: 'idea'
+apply plugin: 'maven'
+apply plugin: 'maven-publish'
+//PLUGIN FOR JAVA APPLICATION
+//apply plugin: 'application'
+
+//JAVA VERSION
+sourceCompatibility = 1.8
+
+//MAIN CLASS NAME FOR JAVA APPLICATION
+//mainClassName = 'main.class.Name'
+
+//MINECRAFT VERSION
+final def VERSION = '1.12'
+
+configurations {
+    extraLibs
+}
+
+configurations.all {
+    resolutionStrategy.cacheChangingModulesFor 0, 'seconds'
+}
+
+/* REPOSITORIES OF THE PROJECT
+*
+*   For CRAFTBUKKIT need to use BuildTools :
+*   https://www.spigotmc.org/wiki/buildtools/
+*
+*/
+repositories {
+    mavenCentral()
+
+    //CRAFTBUKKIT (USE BUILDTOOLS)
+    mavenLocal()
+
+    //SPIGOT REPO
+    maven {
+        url "https://hub.spigotmc.org/nexus/content/repositories/snapshots/"
+    }
+
+    //BUNGEECORD REPO
+    maven {
+        url "https://oss.sonatype.org/content/repositories/snapshots"
+    }
+
+    /* MAVEN REPO WITH PASSWORD
+        maven {
+        url 'myMavenUrl'
+        credentials {
+            username 'myMavenUsername'
+            password 'myMavenPassword'
+        }
+    }
+     */
+}
+
+/* DEPENDENCIES OF THE PROJECT
+*
+*   ./gradlew build to build the project
+*
+*   to add a dependencies to the build use : 'extraLibs'
+*   extraLibs group:'', name:'', version: ''
+*
+*   add 'changing : true' to check for updates every build
+*   compile group: '', name: '', version: '', changing: true
+*
+*/
+dependencies {
+    //SPIGOT
+    compile group : 'org.spigotmc', name: 'spigot-api', version: VERSION+'-R0.1-SNAPSHOT'
+
+    //CRAFTBUKKIT
+    compile group: 'org.bukkit', name: 'craftbukkit', version: VERSION+'-R0.1-SNAPSHOT'
+
+    //GSON (Include with SPIGOT)
+    //extraLibs group: 'com.googlecode.json-simple', name: 'json-simple', version: '1.1'
+
+    //BUNGEECORD
+    compile group: 'net.md-5', name: 'bungeecord-api', version: VERSION+'-SNAPSHOT'
+    compile group: 'net.md-5', name: 'bungeecord-parent', version: VERSION+'-SNAPSHOT'
+    compile group: 'net.md-5', name: 'bungeecord-event', version: VERSION+'-SNAPSHOT'
+
+    configurations.compile.extendsFrom(configurations.extraLibs)
+}
+
+jar {
+    from {
+        configurations.extraLibs.collect { it.isDirectory() ? it : zipTree(it) }
+    }
+
+    /*MANIFEST FOR JAVA APPLICATION
+       need to complete Main class name
+
+    manifest {
+        attributes 'Main-Class': 'main.class.Name'
+    }
+    */
+}
+
+/* PUBLISHING PROJECT TO MAVEN DISTANT REPO
+*
+*   ./gradlew publish
+*   need to complete url , username and password
+*
+*/
+/*
+publishing {
+    repositories {
+        maven {
+            url 'myMavenUrl'
+            credentials {
+                username 'myMavenUsername'
+                password 'myMavenPassword'
+            }
+        }
+    }
+
+    publications {
+        mavenJava(MavenPublication) {
+            from components.java
+        }
+    }
+}
+*/
